@@ -7,8 +7,8 @@ def getHitProbability(R: int, C: int, G: List[List[int]]) -> float:
   that the cell hit by your shot contains a battleship.
   
   Constrains
-    1 =< R, C =< 100
-    0 =< G_i,j =< 1
+    1 <= R, C <= 100
+    0 <= G_i,j <= 1
     The return value must have an absolute or relative error of at most 
     10^(-6) to be considered correct.
   """
