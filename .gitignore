@@ -1,6 +1,7 @@
 # dlete, begin
 contacts.md
 *.code-workspace
+.vscode/
 # dlete, end
 
 # Byte-compiled / optimized / DLL files
