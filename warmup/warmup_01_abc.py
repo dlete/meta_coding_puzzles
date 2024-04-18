@@ -1,8 +1,7 @@
 def getSum(A: int, B: int, C: int) -> int:
-  """
-  Given three integers A, B, and C, determine their sum.
+  """Given three integers A, B, and C, determine their sum.
   
-  Constrains
+  Constraints
     1 =< A, B, C =< 100
   """
 

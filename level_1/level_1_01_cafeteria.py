@@ -79,6 +79,96 @@ def getMaxAdditionalDinersCount(N: int, K: int, M: int, S: List[int]) -> int:
   except AssertionError as err:
     print(err, "Please correct and try again.")
     return None
+  
+  # Auxiliary functions
+  def getNumberOfSections(N: int, S: List[int]) -> int:
+    """Returns the number of sections into which a table can be broken into.
+    """
+    number_of_sections = len(S) + 1
+    for diner in S:
+      if diner == 1:
+        number_of_sections = number_of_sections - 1
+      if diner == N:
+        number_of_sections = number_of_sections - 1
+    #print("getNumberOfSections. Table N with", N, "seats, with seats", S, "already occupied, can be broken into", number_of_sections, "sections")
+
+    # Finish
+    return number_of_sections
+  
+  def getTableSections(N: int, K: int, S: List[int]) -> List[Tuple[List[int], int]]:
+    """Returns a list of tuples with list of seats and number of reserved seats per section
+
+      Approach
+        Treat the first and last section as particular cases. 
+        Build a tuple for each section. 
+        The tuple contains: list of seats, and number of reserved seats
+        Append the section tuple to the list of sections 
+        Return the list of sections
+    """
+    # Verify
+    # That S is sorted
+    # Constraints?
+
+    # Sanitize, sort the list 
+    #S = sorted(S)
+
+    # Auxiliary variables
+    number_of_sections = getNumberOfSections(N, S)
+
+    # Initialize
+    list_of_sections = []
+
+    # Logic
+    for section_index in range(number_of_sections):
+      if section_index == 0:
+        #print("first section, with index", section_index)
+        section_begin = 1
+        section_end = S[0]
+        reserved_ends = 1
+      elif section_index == (number_of_sections-1):
+        #print("last section, with index", section_index)
+        section_begin = S[-1]
+        section_end = N
+        reserved_ends = 1
+      else:
+        #print("middle section, with index", section_index)
+        section_begin = S[section_index-1]
+        section_end = S[section_index]
+        reserved_ends = 2
+      
+      section_list = [section_begin, section_end]
+      section_tuple = (section_list, reserved_ends)
+      list_of_sections.append(section_tuple)
+      #print("getTableSections: section with index", section_index, 
+      #      "has seats", section_list, 
+      #      "and", reserved_ends, "reserved ends.")
+      
+    # end
+    return list_of_sections
+  
+
+  def getAdditionalDiners(K: int, S: List[int], R: int) -> int:
+    """
+    R is the number of reserved seats, already allocated. 
+    Constraint: 1<= R <= 2
+    """
+    # Initialize and auxiliary variables
+    additional_diners = 0
+    seats = (S[-1]-S[0]) + 1
+    if R == 2:
+      valid_seats = seats - R - K
+    else:
+      valid_seats = seats - R
+
+    if valid_seats <= K:
+      additional_diners = 0
+    else:
+      additional_diners = int(valid_seats/(K+1))
+
+    #print("getAdditionalDiners: list", S, "has", seats, "seats,", valid_seats, "are valid. It can fit", additional_diners, "additional diners")
+
+    #end
+    return additional_diners
 
   # Auxiliary variables
   # Find out the sections into which this table can be broken into
@@ -104,97 +194,6 @@ def getMaxAdditionalDinersCount(N: int, K: int, M: int, S: List[int]) -> int:
 
   # end
   return additional_diners_table
-
-
-def getNumberOfSections(N: int, S: List[int]) -> int:
-  """Returns the number of sections into which a table can be broken into.
-  """
-  number_of_sections = len(S) + 1
-  for diner in S:
-    if diner == 1:
-      number_of_sections = number_of_sections - 1
-    if diner == N:
-      number_of_sections = number_of_sections - 1
-  #print("getNumberOfSections. Table N with", N, "seats, with seats", S, "already occupied, can be broken into", number_of_sections, "sections")
-
-  # Finish
-  return number_of_sections
-
-
-def getTableSections(N: int, K: int, S: List[int]) -> List[Tuple[List[int], int]]:
-  """Returns a list of tuples with list of seats and number of reserved seats per section
-
-    Approach
-      Treat the first and last section as particular cases. 
-      Build a tuple for each section. 
-      The tuple contains: list of seats, and number of reserved seats
-      Append the section tuple to the list of sections 
-      Return the list of sections
-  """
-  # Verify
-  # That S is sorted
-  # Constraints?
-
-  # Sanitize, sort the list 
-  #S = sorted(S)
-
-  # Auxiliary variables
-  number_of_sections = getNumberOfSections(N, S)
-
-  # Initialize
-  list_of_sections = []
-
-  # Logic
-  for section_index in range(number_of_sections):
-    if section_index == 0:
-      #print("first section, with index", section_index)
-      section_begin = 1
-      section_end = S[0]
-      reserved_ends = 1
-    elif section_index == (number_of_sections-1):
-      #print("last section, with index", section_index)
-      section_begin = S[-1]
-      section_end = N
-      reserved_ends = 1
-    else:
-      #print("middle section, with index", section_index)
-      section_begin = S[section_index-1]
-      section_end = S[section_index]
-      reserved_ends = 2
-    
-    section_list = [section_begin, section_end]
-    section_tuple = (section_list, reserved_ends)
-    list_of_sections.append(section_tuple)
-    #print("getTableSections: section with index", section_index, 
-    #      "has seats", section_list, 
-    #      "and", reserved_ends, "reserved ends.")
-    
-  # end
-  return list_of_sections
-
-
-def getAdditionalDiners(K: int, S: List[int], R: int) -> int:
-  """
-  R is the number of reserved seats, already allocated. 
-  Constraint: 1<= R <= 2
-  """
-  # Initialize and auxiliary variables
-  additional_diners = 0
-  seats = (S[-1]-S[0]) + 1
-  if R == 2:
-    valid_seats = seats - R - K
-  else:
-    valid_seats = seats - R
-
-  if valid_seats <= K:
-    additional_diners = 0
-  else:
-    additional_diners = int(valid_seats/(K+1))
-
-  #print("getAdditionalDiners: list", S, "has", seats, "seats,", valid_seats, "are valid. It can fit", additional_diners, "additional diners")
-
-  #end
-  return additional_diners
 
 
 if __name__ == '__main__':
