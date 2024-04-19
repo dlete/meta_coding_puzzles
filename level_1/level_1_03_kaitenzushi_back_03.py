@@ -4,18 +4,11 @@ from typing import List
 def getMaximumEatenDishCount(N: int, D: List[int], K: int) -> int:
   """
   Approach
-    There is an auxiliary dictionary containing the previously eaten K x D_i. 
+    There is an auxiliary list containing the previously eaten K x D_i. 
     Iterate over the dishes in the belt (D_j)
     If the dish is in the auxiliary list, pass. 
     Otherwise, remove the last D_i in the list + add the new D_j in 
       the first place + increase the counter of eaten dishes.
-  
-  Try
-    ### TRY WITH A DICTIONARY INSTEAD OF A LIST FOR THE k_previous
-    # https://www.geeksforgeeks.org/python-ordered-set/
-
-    ### CONVERT THE LIST TO A SET BEFORE THE LOOKUP?
-    ### THEN MODIFY HTE LIST/NOT?
   """
   # Verify the arguments against the constraints.  
   # If not valid, inform of the error and terminate.
@@ -32,41 +25,28 @@ def getMaximumEatenDishCount(N: int, D: List[int], K: int) -> int:
     return None
   
   # Initialize
-  # Dictionary with the K previously eaten D_i dishes
-  k_dict = {"d"+str(k+1):"" for k in range(K)}
+  # List with the K previously eaten D_i dishes
+  k_previous = ['a' for i in range(K)]
 
-
-
-
-  ###################
-  # Logic, with map #
-  ###################
-  # Auxiliary function for the map
-  def d_in_k(d):
+  # Logic, with map
+  def d_in_k(d:int) -> bool:
     """Returns False/True if dish d is/not in the K dishes previously eaten
     """
-    # Cast d from int to str because we will use it as a dictionary key
-    d = str(d)
+    ### TRY WITH A DICTIONARY INSTEAD OF A LIST FOR THE k_previous
+    # https://www.geeksforgeeks.org/python-ordered-set/
 
-    ### Case: d is not in the list of previously eaten dish types
-    if d not in k_dict:
-      # append to the rightmost side (newest key)
-      k_dict[d] = ""
-
-      # remove the leftmost key (oldest key)
-      # Find the which is the first key by converting the keys to a list, then
-      # getting the first element of the list. Finally deleting the key.
-      my_keys = list(k_dict.keys())
-      k0 = my_keys[0]
-      del k_dict[k0]
-
-      # The dish d is NOT in the list of previously eaten, we will YES eat it
+    ### CONVERT THE LIST TO A SET BEFORE THE LOOKUP?
+    ### THEN MODIFY HTE LIST/NOT?
+    if d not in k_previous:
+      # That means that we eat the dish, return a True/1
+      # Delete the last element of the list
+      del k_previous[-1]
+      # Append d at the beginning of the list
+      k_previous.insert(0, d) 
       return True
     
-    ### Case: d is in the list of previously eaten dish types
-    # The dish d is YES in the list of previously eaten, we will NOT eat it
+    # Means that we do NOT eat the dish, return a False/0 
     return False
-  
 
   # Build list with all the eaten dishes.
   # We need a list (not a map object) so that we can sum those values.
@@ -74,7 +54,6 @@ def getMaximumEatenDishCount(N: int, D: List[int], K: int) -> int:
 
   # Sum all the rotations, cast to integer, and return
   return int(sum(my_eaten_dishes))
-
 
 
 if __name__ == '__main__':
@@ -86,8 +65,8 @@ if __name__ == '__main__':
     expected_return_value = 5
     my_max_eaten_dish_count = getMaximumEatenDishCount(N, D, K)
     print("Case: valid input")
-    print("For N:", N, "dishes, belt:", D, 
-          ", and K:", K, "types previously eaten", 
+    print("For N dishes:", N, "belt:", D, 
+          ", and with K:", K, "types previously eaten", 
           ", you end up eathing", my_max_eaten_dish_count, "dishes")
     try:
        assert (my_max_eaten_dish_count == expected_return_value), (f"FAILURE, your function has returned {my_max_eaten_dish_count} and was expected to return {expected_return_value}")
@@ -104,9 +83,9 @@ if __name__ == '__main__':
     expected_return_value = 4
     my_maximum_eaten_dish_count = getMaximumEatenDishCount(N, D, K)
     print("Case: valid input")
-    print("For N:", N, "dishes, belt:", D, 
-          ", and K:", K, "types previously eaten", 
-          ", you end up eathing", my_max_eaten_dish_count, "dishes")
+    print("For N dishes:", N, "belt:", D, 
+          ", and with K:", K, "types previously eaten", 
+          ", you end up eathing", my_maximum_eaten_dish_count, "dishes")
     try:
        assert (my_maximum_eaten_dish_count == expected_return_value), f"FAILURE, your function has returned {my_maximum_eaten_dish_count} and was expected to return {expected_return_value}"
     except AssertionError as err:
@@ -122,9 +101,9 @@ if __name__ == '__main__':
     expected_return_value = 2
     my_maximum_eaten_dish_count = getMaximumEatenDishCount(N, D, K)
     print("Case: valid input")
-    print("For N:", N, "dishes, belt:", D, 
-          ", and K:", K, "types previously eaten", 
-          ", you end up eathing", my_max_eaten_dish_count, "dishes")
+    print("For N dishes:", N, "belt:", D, 
+          ", and with K:", K, "types previously eaten", 
+          ", you end up eathing", my_maximum_eaten_dish_count, "dishes")
     try:
        assert (my_maximum_eaten_dish_count == expected_return_value), f"FAILURE, your function has returned {my_maximum_eaten_dish_count} and was expected to return {expected_return_value}"
     except AssertionError as err:
